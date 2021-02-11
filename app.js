@@ -95,7 +95,7 @@ app.use("/ava",router.get("/:id(*)",function(req,res,next){
   let id=req.params.id;
   const a =availabilities.find(e=>e.id===id)
   if(a){
-    res.send(a.ava)
+    res.json({status:a.ava})
   }
 }))
 
