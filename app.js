@@ -47,13 +47,13 @@ let xmlParser = require('xml2js');
 
 var availabilities=[]
 
-var manufacturer=['umpante', 'ippal', 'abiplos', 'okkau', 'niksleh', 'laion']
+var manufacturer=['umpante', 'abiplos', 'okkau', 'niksleh',"hennex","juuran"]
 
 
 async function fet(element){
   r =await axios.get("https://bad-api-assignment.reaktor.com/v2/availability/"+element)
   d=await r.data
-  console.log(d.response.length)
+  console.log(d.response.length) //TODO: Cannot read property 'length' of undefined bunu düzelt 
   console.log(element)
   if(d.response.length===2){ // dont know the reason why but when its empty it returns 2
     console.log("EMPTY")
@@ -64,6 +64,18 @@ async function fet(element){
     return(d.response)
   }
   
+}
+
+function getManufacturers(){
+  var d={}
+  var a=[]
+  var b=[]
+  axios.get("https://bad-api-assignment.reaktor.com/v2/products/gloves").then(r=>{
+    d=r.data
+    d.forEach(item=>{a.push(item.manufacturer)})
+    b=[... new Set(a)]
+    manufacturer=b
+  })
 }
 
 function avail(){
@@ -87,7 +99,9 @@ function avail(){
   });
   
 }
-avail()
+getManufacturers()
+setInterval(getManufacturers,4*1000*60)
+setTimeout(avail,1300)
 setInterval(avail,5*1000*60)
 
 
