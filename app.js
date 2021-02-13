@@ -7,7 +7,7 @@ var logger = require('morgan');
 const axios = require('axios').default;
 
 
-const { setInterval } = require('timers');
+const { setInterval,clearInterval } = require('timers');
 
 
 var cors=require("cors")
@@ -44,6 +44,7 @@ app.use('/gloves', glovesRouter);
 app.use('/beanies', beaniesRouter);
 
 let xmlParser = require('xml2js');
+const { count } = require('console');
 
 var availabilities=[]
 
@@ -107,9 +108,23 @@ setInterval(avail,5*1000*60)
 
 app.use("/ava",router.get("/:id(*)",function(req,res,next){
   let id=req.params.id;
-  const a =availabilities.find(e=>e.id===id)
+  var a =availabilities.find(e=>e.id===id)
+  var count=0
   if(a){
     res.json({status:a.ava})
+  }
+  else{
+    var loop=setInterval(function(){
+     a =availabilities.find(e=>e.id===id)
+     if(a){
+      clearInterval(loop)
+      res.json({status:a.ava})
+    }
+    else if(count>40){
+      clearInterval(loop)
+      res.sendStatus(404)
+    }
+    },3000)
   }
 }))
 
