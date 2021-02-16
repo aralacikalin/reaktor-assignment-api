@@ -120,11 +120,11 @@ app.use("/ava",router.get("/:id(*)",function(req,res,next){
       clearInterval(loop)
       res.json({status:a.ava})
     }
-    else if(count>40){
+    else if(count>55){
       clearInterval(loop)
       res.sendStatus(404)
     }
-    },3000)
+    },5000)
   }
 }))
 
